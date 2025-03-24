@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+configurations:
+  storage:
+    path: cf/storage
+  repository:
+    path: cf/repository.dt
