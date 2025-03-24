@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request, jsonify
 
 from core.configurations import ConfigurationRepository
@@ -22,7 +24,7 @@ class ConfigFileController:
 
         @self.app.route('/cf/save', methods=['POST'])
         def save():
-            request_body: dict = request.json
+            request_body: dict = json.loads(request.json)
             print(f'Request Body: {request_body}')
             namespace = request_body.get('namespace', '')
             name = request_body.get('name', '')
