@@ -2,7 +2,7 @@ import yaml
 
 from controllers.cf import ConfigFileController
 from core.configurations import ConfigurationRepository
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from responses.exceptions import BizException, Codes
 from responses.results import R
 
@@ -39,6 +39,16 @@ def handle_exception(e):
 
     r = R.error(e)
     return jsonify(r), 200
+
+
+@app.before_request
+def token_filter():
+    token = request.headers.get('Authorization')
+    expected = app_configurations__['server']['token']
+    if token != expected:
+        e = BizException.from_codes(Codes.UNAUTHORIZED)
+        r = R.error(e)
+        return jsonify(r), 200
 
 
 if __name__ == '__main__':

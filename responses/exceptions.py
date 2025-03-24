@@ -9,6 +9,7 @@ class Codes(Enum):
 
     # Client Error: 1000 - 1999
     ARGS_ERROR = (1000, 'Args Error.')
+    UNAUTHORIZED = (1001, 'Unauthorized.')
 
     # Server Error: 9000 - 9999
     SERVER_ERROR = (9999, 'Server Error.')
