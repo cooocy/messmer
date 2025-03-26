@@ -1,9 +1,9 @@
+from config import app_configurations
 from flask import request, Flask
-
 from res import BizException, Codes, R
 
 
-def register_filters(app: Flask, app_configurations: dict):
+def register_filters(app: Flask):
     """
     Register Filters.
     """

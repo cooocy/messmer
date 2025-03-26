@@ -1,19 +1,18 @@
-import config.loader
 import filters
 
+from config import app_configurations
 from controllers.cf import ConfigFileController
 from core.configurations import ConfigurationRepository
 from flask import Flask
 from res import BizException, Codes, R
 
 app_name__: str = 'Messmer'
-app_configurations__: dict = config.loader.load_yaml_configurations('config/app.yaml')
 app__ = Flask(app_name__)
 
-filters.register_filters(app__, app_configurations__)
+filters.register_filters(app__)
 
-repository = ConfigurationRepository(app_configurations__)
-cf_controller = ConfigFileController(app__, app_configurations__, repository)
+repository = ConfigurationRepository()
+cf_controller = ConfigFileController(app__, repository)
 
 
 @app__.errorhandler(Exception)
@@ -42,4 +41,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app__.run(host='0.0.0.0', port=app_configurations__['server']['port'], debug=False)
+    app__.run(host='0.0.0.0', port=app_configurations['server']['port'], debug=False)

@@ -7,10 +7,8 @@ from res import BizException, Codes, R
 class ConfigFileController:
     def __init__(self,
                  app: Flask,
-                 app_configurations: dict,
                  repository: ConfigurationRepository):
         self.app = app
-        self.app_configurations = app_configurations
         self.repository = repository
         self.register_routes()
 

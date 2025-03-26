@@ -2,6 +2,7 @@ import os.path
 
 from dataclasses import dataclass
 
+from config import app_configurations
 from res import BizException, Codes
 
 
@@ -23,8 +24,7 @@ class ConfigurationRepository:
     Keep the relationship of namespace/app_name/hostname/env/name content.
     """
 
-    def __init__(self, app_configurations: dict):
-        self.app_configurations = app_configurations
+    def __init__(self):
         self.local_disk_file_storage = LocalDiskFileStorage(app_configurations)
 
     def save(self, configuration: Configuration):
