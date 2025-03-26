@@ -1,31 +1,22 @@
-import yaml
+import config.loader
+import filters
 
 from controllers.cf import ConfigFileController
 from core.configurations import ConfigurationRepository
-from flask import Flask, request, jsonify
-from responses.exceptions import BizException, Codes
-from responses.results import R
+from flask import Flask
+from res import BizException, Codes, R
 
+app_name__: str = 'Messmer'
+app_configurations__: dict = config.loader.load_yaml_configurations('config/app.yaml')
+app__ = Flask(app_name__)
 
-def load_yaml_configurations(config_path):
-    with open(config_path, 'r') as file:
-        config = yaml.safe_load(file)
-    return config
+filters.register_filters(app__, app_configurations__)
 
-
-app_configurations__ = load_yaml_configurations('config/app.yaml')
 repository = ConfigurationRepository(app_configurations__)
-app = Flask('Messmer')
-cf_controller = ConfigFileController(app, app_configurations__, repository)
+cf_controller = ConfigFileController(app__, app_configurations__, repository)
 
 
-@app.route('/')
-def hello_world():  # put application's code here
-    r = R.ok('Hello! This is Messmer.')
-    return jsonify(r)
-
-
-@app.errorhandler(Exception)
+@app__.errorhandler(Exception)
 def handle_exception(e):
     """
     Global Exceptions Handler.
@@ -37,19 +28,18 @@ def handle_exception(e):
         print(e)
         e = BizException.from_codes(Codes.SERVER_ERROR)
 
-    r = R.error(e)
-    return jsonify(r), 200
+    return R.error(e).json_response()
 
 
-@app.before_request
-def token_filter():
-    token = request.headers.get('Authorization')
-    expected = app_configurations__['server']['token']
-    if token != expected:
-        e = BizException.from_codes(Codes.UNAUTHORIZED)
-        r = R.error(e)
-        return jsonify(r), 200
+@app__.route('/')
+def index():
+    """
+    Health Check.
+    """
+
+    r = R.ok(f'Hello! This is {app_name__}.')
+    return r.json_response()
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=app_configurations__['server']['port'], debug=False)
+    app__.run(host='0.0.0.0', port=app_configurations__['server']['port'], debug=False)

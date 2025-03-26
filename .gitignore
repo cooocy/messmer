@@ -1,3 +1,5 @@
 .idea/
 __pycache__/
 cf
+http-requests
+nohup.out

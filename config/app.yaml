@@ -1,9 +1,9 @@
 server:
   port: 8080
   token: mock0
+  white_apis:
+    - /
 
 configurations:
   storage:
     path: cf/storage
-  repository:
-    path: cf/repository.dt
